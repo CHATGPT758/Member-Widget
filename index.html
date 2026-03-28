@@ -8,42 +8,50 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   
   body {
-    background: #1a2433; /* Matches Chess.com Dark Sidebar */
-    font-family: system-ui, -apple-system, sans-serif;
+    background: transparent; /* Allows parent background to show through */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 10px;
-    overflow-x: hidden; /* Prevents horizontal scrolling */
+    overflow-x: hidden;
   }
 
   /* PANEL CONTAINER */
   .panel {
-    background: #1f2d3d;
-    border-radius: 18px;
-    padding: 14px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 16px;
     width: 100%;
     max-width: 320px;
-    border: 1px solid #2f4a63;
+    border: 1px solid #e1e8ed;
     margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   /* TITLE */
   .panel-title {
-    font-weight: 700;
-    color: #6aacda;
+    font-weight: 800;
+    color: #1a73e8; /* Primary Blue */
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    font-size: 14px;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 15px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
   }
 
   .dot {
-    width: 8px;
-    height: 8px;
-    background: #4da3ff;
+    width: 10px;
+    height: 10px;
+    background: #34a853; /* Success Green for "Live" feel */
     border-radius: 50%;
-    box-shadow: 0 0 8px #4da3ff;
+    box-shadow: 0 0 6px rgba(52, 168, 83, 0.4);
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
   }
 
   /* CARD - Each Member Row */
@@ -51,28 +59,29 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: #223447;
-    border: 1px solid #2f4a63;
-    border-radius: 14px;
-    padding: 10px;
+    background: #f8fbff; /* Very Light Blue Tint */
+    border: 1px solid #d0e3ff;
+    border-radius: 16px;
+    padding: 12px;
     margin-bottom: 10px;
-    transition: 0.2s ease;
-    text-decoration: none; /* Removes blue underline */
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
   }
 
   .card:hover {
-    transform: scale(1.02);
-    background: #263d55;
-    border-color: #4da3ff;
+    transform: translateY(-2px);
+    background: #ffffff;
+    border-color: #1a73e8;
+    box-shadow: 0 4px 8px rgba(26, 115, 232, 0.1);
   }
 
   /* AVATAR */
   .avatar-ring {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     padding: 2px;
-    background: #4da3ff;
+    background: linear-gradient(45deg, #1a73e8, #6aacda);
     flex-shrink: 0;
   }
 
@@ -81,58 +90,66 @@
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
+    background: white;
   }
 
-  /* INFO - The Secret Fix for Disappearing Usernames */
+  /* INFO */
   .card-info {
     flex: 1;
     display: flex;
-    flex-direction: column; /* Stacks name and rating vertically */
-    min-width: 0; /* Important for ellipsis to work */
+    flex-direction: column;
+    min-width: 0;
   }
 
   .name {
     font-weight: 700;
-    color: #d8eaf4;
-    font-size: 13px;
+    color: #202124;
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Adds ... if name is too long */
+    text-overflow: ellipsis;
     margin-bottom: 2px;
   }
 
   .sub {
     font-size: 11px;
-    color: #8fb3cc;
+    color: #5f6368;
     display: flex;
     align-items: center;
     gap: 4px;
+    font-weight: 500;
+  }
+
+  .rating-tag {
+    color: #1a73e8;
+    font-weight: 700;
   }
 
   /* TIME STAMP */
   .time {
     font-size: 10px;
-    color: #6aacda;
+    color: #80868b;
     white-space: nowrap;
     align-self: flex-start;
-    margin-top: 2px;
+    margin-top: 3px;
+    font-weight: 600;
   }
 
   /* LOADING STATE */
   .skeleton {
-    height: 64px;
-    border-radius: 14px;
-    background: #2a3d52;
+    height: 68px;
+    border-radius: 16px;
+    background: #f1f3f4;
     margin-bottom: 10px;
     animation: pulse 1.5s infinite;
   }
 
   @keyframes pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+    0%, 100% { background-color: #f1f3f4; }
+    50% { background-color: #e8eaed; }
   }
 
-  .error { font-size: 12px; color: #8fb3cc; text-align: center; padding: 20px; }
+  .error { font-size: 12px; color: #d93025; text-align: center; padding: 20px; }
 </style>
 </head>
 
@@ -140,7 +157,8 @@
 
 <div id="root">
   <div class="panel">
-    <div class="panel-title"><span class="dot"></span> Loading Members...</div>
+    <div class="panel-title"><span class="dot"></span> Searching Galaxy...</div>
+    <div class="skeleton"></div>
     <div class="skeleton"></div>
     <div class="skeleton"></div>
     <div class="skeleton"></div>
@@ -184,7 +202,6 @@ async function load() {
     const res = await fetch(`${API}/club/${CLUB}/members`);
     const data = await res.json();
 
-    // Combining all categories to find the absolute newest
     const all = [...(data.weekly||[]), ...(data.monthly||[]), ...(data.all_time||[])];
     const seen = new Set();
     const unique = all.filter(m => {
@@ -196,7 +213,6 @@ async function load() {
     unique.sort((a, b) => (b.joined || 0) - (a.joined || 0));
     const newest = unique.slice(0, COUNT);
 
-    // Fetching profile & stats for each member
     const details = await Promise.all(newest.map(async m => {
       try {
         const [pRes, sRes] = await Promise.all([
@@ -218,7 +234,7 @@ async function load() {
       <div class="panel">
         <div class="panel-title">
           <span class="dot"></span>
-          New Members
+          Newest Aliens
         </div>
         ${details.map(({username, profile, stats, joined}) => {
           const avatar = profile.avatar || 'https://www.chess.com/bundles/web/images/noavatar_l.84a92436@2x.gif';
@@ -232,7 +248,7 @@ async function load() {
               <div class="card-info">
                 <div class="name">@${username}</div>
                 <div class="sub">
-                  <span>${rating.icon}</span> ${rating.value} (${rating.label})
+                  ${rating.icon} <span class="rating-tag">${rating.value}</span> (${rating.label})
                 </div>
               </div>
               <div class="time">${timeAgo(joined)}</div>
@@ -243,12 +259,12 @@ async function load() {
     `;
 
   } catch(e) {
-    root.innerHTML = `<div class="panel"><div class="error">Failed to load club data.</div></div>`;
+    root.innerHTML = `<div class="panel"><div class="error">Failed to sync with Chess.com.</div></div>`;
   }
 }
 
 load();
-setInterval(load, 60000); // Refresh every minute
+setInterval(load, 60000);
 </script>
 
 </body>
